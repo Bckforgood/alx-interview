@@ -20,9 +20,9 @@ def canUnlockAll(boxes):
 
     n = len(boxes)
     unlocked = [False] * n
-    unlocked[0] = True  # The first box is always unlocked
+    unlocked[0] = True  
 
-    keys_stack = [0]  # Start with the keys in the first box
+    keys_stack = [0]
 
     while keys_stack:
         current_box = keys_stack.pop()
