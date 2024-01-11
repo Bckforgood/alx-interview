@@ -20,7 +20,7 @@ def canUnlockAll(boxes):
 
     n = len(boxes)
     unlocked = [False] * n
-    unlocked[0] = True  
+    unlocked[0] = True 
 
     keys_stack = [0]
 
