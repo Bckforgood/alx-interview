@@ -1,21 +1,25 @@
 #!/usr/bin/python3
-"""
-Method that calculates the fewest number of
-operations needed to result in exactly n H characters.
-"""
+""" Module for 0-minoperations"""
 
 
 def minOperations(n):
-    if n <= 1:
+    """
+    minOperations
+    Gets fewest # of operations needed to result in exactly n H characters
+    """
+    # all outputs should be at least 2 char: (min, Copy All => Paste)
+    if (n < 2):
         return 0
-
-    operations = [float('inf')] * (n + 1)
-    operations[1] = 0
-
-    for i in range(2, n + 1):
-        for j in range(2, i + 1):
-            if i % j == 0:
-                operations[i] = min(operations[i], operations[j] + (i // j))
-                break
-
-    return operations[n] if operations[n] != float('inf') else 0
+    op, rt = 0, 2
+    while rt <= n:
+        # if n evenly divides by root
+        if n % rt == 0:
+            # total even-divisions by root = total operations
+            op += rt
+            # set n to the remainder
+            n = n / rt
+            # reduce root to find remaining smaller vals that evenly-divide n
+            rt -= 1
+        # increment root until it evenly-divides n
+        rt += 1
+    return op
