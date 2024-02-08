@@ -1,68 +1,67 @@
 #!/usr/bin/python3
+"""
+Solution to the N-Queens problem
+"""
 import sys
 
 
-def is_safe(board, row, col):
+def backtrack(row, n, cols, pos_diag, neg_diag, board):
     """
-    Check if it's safe to place a queen at board[row][col]
+    Backtracking function to find solutions to the N-Queens problem
     """
-    # Check this row on left side
-    for i in range(col):
-        if board[row][i] == 1:
-            return False
-
-    # Check upper diagonal on left side
-    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
-
-    # Check lower diagonal on left side
-    for i, j in zip(range(row, len(board)), range(col, -1, -1)):
-        if board[i][j] == 1:
-            return False
-
-    return True
-
-
-def solve_nqueens_util(board, col, solutions):
-    """
-    Solve N queens problem recursively
-    """
-    n = len(board)
-
-    # If all queens are placed, append current solution to list of solutions
-    if col == n:
-        solutions.append([[i, row] for i, row in enumerate(board)])
+    if row == n:
+        res = []
+        for row_idx in range(len(board)):
+            for col_idx in range(len(board[row_idx])):
+                if board[row_idx][col_idx] == 1:
+                    res.append([row_idx, col_idx])
+        print(res)
         return
 
-    for i in range(n):
-        if is_safe(board, i, col):
-            board[i][col] = 1
-            solve_nqueens_util(board, col + 1, solutions)
-            board[i][col] = 0
+    for col in range(n):
+        if col in cols or (row + col) in pos_diag or (row - col) in neg_diag:
+            continue
+
+        cols.add(col)
+        pos_diag.add(row + col)
+        neg_diag.add(row - col)
+        board[row][col] = 1
+
+        backtrack(row + 1, n, cols, pos_diag, neg_diag, board)
+
+        cols.remove(col)
+        pos_diag.remove(row + col)
+        neg_diag.remove(row - col)
+        board[row][col] = 0
 
 
-def print_solutions(solutions):
+def nqueens(n):
     """
-    Print the solutions
+    Finds solutions to the N-Queens problem
+    Args:
+        n (int): Number of queens. Must be >= 4
+    Returns:
+        List of lists representing coordinates of each queen possible solutions
     """
-    for solution in solutions:
-        print(solution)
+    cols = set()
+    pos_diag = set()
+    neg_diag = set()
+    board = [[0] * n for _ in range(n)]
+
+    backtrack(0, n, cols, pos_diag, neg_diag, board)
 
 
-def nqueens(N):
-    """
-    Main function to solve N queens problem
-    """
-    if not isinstance(N, int):
+if __name__ == "__main__":
+    args = sys.argv
+    if len(args) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+    try:
+        N = int(args[1])
+        if N < 4:
+            print("N must be at least 4")
+            sys.exit(1)
+        nqueens(N)
+    except ValueError:
         print("N must be a number")
         sys.exit(1)
-
-    if N < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    board = [[0] * N for _ in range(N)]
-    solutions = []
-    solve_nqueens_util(board, 0, solutions)
-    print_solutions(solutions)
