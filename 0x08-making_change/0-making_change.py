@@ -23,8 +23,7 @@ def makeChange(coins, total):
     if total < 0:
         return 0
 
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0
+    dp = [0] + [float('inf')] * total
 
     for coin in coins:
         for amount in range(coin, total + 1):
